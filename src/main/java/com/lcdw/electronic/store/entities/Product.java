@@ -34,4 +34,6 @@ public class Product {
     private boolean live;
 
     private boolean stock;
+
+    private String productImageName;
 }
