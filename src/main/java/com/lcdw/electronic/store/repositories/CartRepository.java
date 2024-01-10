@@ -9,5 +9,5 @@ import java.util.Optional;
 
 public interface CartRepository extends JpaRepository<Cart,String> {
 
-    Optional<Cart> findBYUser(User user); // option is for get if we use get in serviceimp then use option
+    Optional<Cart> findByUser(User user); // option is for get if we use get in serviceimp then use option
 }
