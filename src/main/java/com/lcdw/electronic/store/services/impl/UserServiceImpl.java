@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +23,9 @@ public class UserServiceImpl implements UserService {
 
 
     @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
     private UserRepository userRepository;
 
     @Autowired
@@ -30,6 +34,8 @@ public class UserServiceImpl implements UserService {
     public UserDto createUser(UserDto userDto) {
         String userId= UUID.randomUUID().toString();
         userDto.setUserId(userId);
+        //encoding password
+        userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
         //dto--entity
         User user = dtoToEntity(userDto);
         User saveUser= userRepository.save(user);
