@@ -1,15 +1,16 @@
 package com.lcdw.electronic.store.entities;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -41,10 +42,22 @@ public class User implements UserDetails {
     @Column(name="user_image_name")
     private String userImage;
 
+    @OneToMany(mappedBy = "user" ,fetch= FetchType.LAZY,cascade = CascadeType.REMOVE)
+    private List<Order> orders = new ArrayList<>();
+
+
+    @ManyToMany(fetch= FetchType.EAGER,cascade = CascadeType.ALL)
+    private Set<Role> roles= new HashSet<>();
+
+    @OneToOne(mappedBy = "user",cascade = CascadeType.REMOVE)
+    private Cart cart;
+
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        Set<SimpleGrantedAuthority> authorities=this.roles.stream().map(role-> new SimpleGrantedAuthority(role.getRoleName())).collect(Collectors.toSet());
+        return authorities;
     }
 
     @Override

@@ -1,11 +1,14 @@
 package com.lcdw.electronic.store.services.impl;
 
 import com.lcdw.electronic.store.dtos.UserDto;
+import com.lcdw.electronic.store.entities.Role;
 import com.lcdw.electronic.store.entities.User;
+import com.lcdw.electronic.store.repositories.RoleRepository;
 import com.lcdw.electronic.store.repositories.UserRepository;
 import com.lcdw.electronic.store.services.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +33,11 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private ModelMapper mapper;
+
+    @Value("${normal.role.id}")
+    private String normalRoleId;
+    @Autowired
+    private RoleRepository roleRepository;
     @Override
     public UserDto createUser(UserDto userDto) {
         String userId= UUID.randomUUID().toString();
@@ -38,6 +46,9 @@ public class UserServiceImpl implements UserService {
         userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
         //dto--entity
         User user = dtoToEntity(userDto);
+        //fetch role of normal and set it to user
+        Role role= roleRepository.findById(normalRoleId).get();
+        user.getRoles().add(role);
         User saveUser= userRepository.save(user);
 
         UserDto newDto= entityToDto(saveUser);

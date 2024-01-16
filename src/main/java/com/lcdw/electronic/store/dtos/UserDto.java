@@ -1,12 +1,15 @@
 package com.lcdw.electronic.store.dtos;
 
 
+import com.lcdw.electronic.store.entities.Role;
 import com.lcdw.electronic.store.validation.ImageNameValid;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -40,4 +43,7 @@ public class UserDto {
 
         @ImageNameValid
         private String userImage;
+
+        private Set<RoleDto> roles= new HashSet<>();
+
 }
